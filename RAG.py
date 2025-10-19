@@ -11,6 +11,11 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Weaviate
 # 将 OpenAI 模型替换为 Google Generative AI 模型
 from langchain_google_genai import ChatGoogleGenerativeAI
+# OpenAI 模型（备选方案）
+from langchain_community.embeddings import OpenAIEmbeddings
+# Ollama 嵌入模型（本地部署方案）
+from langchain_ollama import OllamaEmbeddings
+from langchain_openai import ChatOpenAI
 from langchain_text_splitters import CharacterTextSplitter
 from langchain_core.runnables import RunnablePassthrough
 from langgraph.graph import StateGraph, END
@@ -40,11 +45,94 @@ client = weaviate.Client(
     embedded_options=EmbeddedOptions()
 )
 
-# 使用 Google Generative AI 的嵌入模型替换 OpenAI 的嵌入模型
-embedding = GoogleGenerativeAIEmbeddings(
-    model="gemini-embedding-001",
-    # google_api_key=config.Config.GOOGLE_API_KEY
-)
+def create_embedding_model():
+    """创建嵌入模型，优先使用 Google 模型，失败则回退到 Ollama 或 OpenAI"""
+    try:
+        # 尝试使用 Google Generative AI 的嵌入模型
+        if config.Config.GOOGLE_API_KEY:
+            # 在程序中设置 Google 嵌入模型的地址和其他客户端选项
+            embedding = GoogleGenerativeAIEmbeddings(
+                model="models/embedding-001",
+                google_api_key=config.Config.GOOGLE_API_KEY,
+                # 设置自定义端点（如果需要）
+                # client_options={"api_endpoint": "generativelanguage.googleapis.com"},
+                # 使用 REST 传输而不是 gRPC（如果需要）
+                # transport="rest",
+                # 设置超时时间
+                timeout=120
+            )
+            # 测试模型是否可用
+            embedding.embed_query("test")
+            print("✓ 使用 Google Generative AI 嵌入模型")
+            return embedding
+    except Exception as e:
+        print(f"✗ Google Generative AI 嵌入模型不可用: {e}")
+    
+    try:
+        # 尝试使用 Ollama 的嵌入模型（本地部署）
+        embedding = OllamaEmbeddings(
+            model="nomic-embed-text",  # Ollama 默认的嵌入模型
+            # 如果 Ollama 运行在不同的地址，可以指定 base_url
+            # base_url="http://localhost:11434"
+        )
+        # 测试模型是否可用
+        embedding.embed_query("test")
+        print("✓ 使用 Ollama 嵌入模型")
+        return embedding
+    except Exception as e:
+        print(f"✗ Ollama 嵌入模型不可用: {e}")
+    
+    try:
+        # 回退到 OpenAI 的嵌入模型
+        if config.Config.OPENAI_API_KEY:
+            embedding = OpenAIEmbeddings(
+                openai_api_key=config.Config.OPENAI_API_KEY,
+                openai_api_base=config.Config.OPENAI_BASE_URL
+            )
+            print("✓ 使用 OpenAI 嵌入模型")
+            return embedding
+    except Exception as e:
+        print(f"✗ OpenAI 嵌入模型不可用: {e}")
+    
+    raise Exception("无法初始化任何嵌入模型")
+
+def create_llm_model():
+    """创建语言模型，优先使用 Google 模型，失败则回退到 OpenAI"""
+    try:
+        # 尝试使用 Google Generative AI 模型
+        if config.Config.GOOGLE_API_KEY:
+            llm = ChatGoogleGenerativeAI(
+                model="gemini-pro",
+                google_api_key=config.Config.GOOGLE_API_KEY,
+                temperature=0,
+                # 同样可以设置 Google 语言模型的客户端选项
+                # client_options={"api_endpoint": "generativelanguage.googleapis.com"},
+                # transport="rest",
+                timeout=120
+            )
+            print("✓ 使用 Google Generative AI 语言模型")
+            return llm
+    except Exception as e:
+        print(f"✗ Google Generative AI 语言模型不可用: {e}")
+    
+    try:
+        # 回退到 OpenAI 模型
+        if config.Config.OPENAI_API_KEY:
+            llm = ChatOpenAI(
+                model_name=config.Config.OPENAI_MODEL,
+                temperature=0,
+                openai_api_key=config.Config.OPENAI_API_KEY,
+                openai_api_base=config.Config.OPENAI_BASE_URL
+            )
+            print("✓ 使用 OpenAI 语言模型")
+            return llm
+    except Exception as e:
+        print(f"✗ OpenAI 语言模型不可用: {e}")
+    
+    raise Exception("无法初始化任何语言模型")
+
+# 创建嵌入模型
+embedding = create_embedding_model()
 
 vectorstore = Weaviate.from_documents(
     client=client,
@@ -54,12 +142,9 @@ vectorstore = Weaviate.from_documents(
 )
 
 retriever = vectorstore.as_retriever()
-# 使用 Google Generative AI 模型替换 OpenAI 模型
-llm = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash",
-    google_api_key=config.Config.GOOGLE_API_KEY,  # 使用配置中的 Google API 密钥
-    temperature=0
-)
+
+# 创建语言模型
+llm = create_llm_model()
 
 class RAGGraphState(TypedDict):
     question: str
