@@ -10,10 +10,14 @@ class Config:
     # API Keys
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+    # 添加 Google API 密钥
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     
     # Model Settings
     OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4")
     ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-3-opus-20240229")
+    # 添加 Google 模型设置
+    GOOGLE_MODEL = os.getenv("GOOGLE_MODEL", "gemini-pro")
     
     # API Endpoints
     OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
@@ -26,7 +30,7 @@ class Config:
     @classmethod
     def validate(cls):
         """验证必要的配置是否存在"""
-        if not cls.OPENAI_API_KEY and not cls.ANTHROPIC_API_KEY:
+        if not cls.OPENAI_API_KEY and not cls.ANTHROPIC_API_KEY and not cls.GOOGLE_API_KEY:
             raise ValueError("至少需要配置一个API密钥")
         
         return True
@@ -43,5 +47,6 @@ if __name__ == "__main__":
     print("配置信息:")
     print(f"OpenAI Model: {Config.OPENAI_MODEL}")
     print(f"Anthropic Model: {Config.ANTHROPIC_MODEL}")
+    print(f"Google Model: {Config.GOOGLE_MODEL}")
     print(f"Temperature: {Config.TEMPERATURE}")
     print(f"Max Tokens: {Config.MAX_TOKENS}")
