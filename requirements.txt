@@ -1,3 +1,11 @@
 langchain
 langchain-openai
 python-dotenv
+langchain-google-genai
+google-adk 
+google-genai
+nest-asyncio
+langchain-community
+langgraph
+weaviate-client
+requests
