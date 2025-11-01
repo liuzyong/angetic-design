@@ -1,11 +1,11 @@
-langchain
-langchain-openai
+langchain==0.3.0
+langchain-openai==0.3.0
 python-dotenv
 langchain-google-genai
 google-adk 
 google-genai
 nest-asyncio
-langchain-community
-langgraph
+langchain-community==0.3.0
+langgraph==0.3.0
 weaviate-client
 requests
