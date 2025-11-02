@@ -2,11 +2,7 @@ import os
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from dotenv import load_dotenv
 from config import Config
-
-# 加载 .env 文件中的环境变量
-load_dotenv()
 
 # 初始化语言模型（推荐使用 ChatOpenAI）
 llm = ChatOpenAI(
