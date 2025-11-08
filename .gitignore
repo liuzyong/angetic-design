@@ -1,2 +1,7 @@
-.env
-.conda/*
+.conda/
+src/__pycache__/
+openspec/changes/.DS_Store
+openspec/changes/add-ai-text-transformer/.DS_Store
+openspec/changes/add-ai-text-transformer/specs/.DS_Store
+openspec/.DS_Store
+openspec/changes/add-ai-text-transformer/{specs/.DS_Store

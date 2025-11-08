@@ -18,6 +18,8 @@ Angetic Design is a design system and component library for building consistent,
 - Use Prettier for code formatting
 - Use ESLint for linting
 - Naming conventions: camelCase for variables/functions, PascalCase for components, UPPER_SNAKE_CASE for constants
+- 单独的子模块需要放在src下面的子文件夹下面
+- 所有的日志都放在 src/logs文件夹下面
 
 ### Architecture Patterns
 - Component-based architecture

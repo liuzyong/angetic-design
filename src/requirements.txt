@@ -10,3 +10,5 @@ langgraph==0.3.0
 weaviate-client
 requests
 crewai==1.3.0
+pyautogui
+pyperclip
