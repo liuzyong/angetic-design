@@ -20,6 +20,9 @@ import logging
 import platform
 import pyperclip
 import pyautogui
+
+# Add parent directory to path to import config
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from config import Config
 
 # Configure logging

@@ -1,7 +1,7 @@
 # Change: Add AI Text Transformer Feature
 
 ## Why
-Users need a way to quickly transform selected text using AI capabilities directly from their desktop environment without copying/pasting between applications.
+Users need a way to quickly transform selected text using AI capabilities directly from their desktop environment without copying/pasting between applications. This feature will enhance productivity by providing instant AI-powered text improvements.
 
 ## What Changes
 - Add ability to capture currently selected text from any application
