@@ -1,31 +1,57 @@
 # Project Context
 
 ## Purpose
-[Describe your project's purpose and goals]
+Angetic Design is a design system and component library for building consistent, accessible, and responsive user interfaces.
 
 ## Tech Stack
-- [List your primary technologies]
-- [e.g., TypeScript, React, Node.js]
+- TypeScript
+- React
+- Storybook
+- Jest for testing
+- CSS Modules for styling
+- Figma for design
 
 ## Project Conventions
 
 ### Code Style
-[Describe your code style preferences, formatting rules, and naming conventions]
+- Follow Airbnb JavaScript Style Guide
+- Use Prettier for code formatting
+- Use ESLint for linting
+- Naming conventions: camelCase for variables/functions, PascalCase for components, UPPER_SNAKE_CASE for constants
 
 ### Architecture Patterns
-[Document your architectural decisions and patterns]
+- Component-based architecture
+- Atomic design principles
+- Reusable and composable components
+- Separation of concerns between presentational and container components
 
 ### Testing Strategy
-[Explain your testing approach and requirements]
+- Unit tests for all components using Jest and React Testing Library
+- Visual regression testing with Storybook
+- Accessibility testing
+- Snapshot testing for static components
 
 ### Git Workflow
-[Describe your branching strategy and commit conventions]
+- Feature branching model
+- Conventional commit messages
+- Pull requests with code review required
+- Squash and merge for clean history
 
 ## Domain Context
-[Add domain-specific knowledge that AI assistants need to understand]
+This project focuses on creating a design system that includes:
+- UI components (buttons, forms, cards, etc.)
+- Design tokens (colors, typography, spacing)
+- Documentation and guidelines
+- Accessibility standards
 
 ## Important Constraints
-[List any technical, business, or regulatory constraints]
+- Must meet WCAG 2.1 AA accessibility standards
+- Support for modern browsers (Chrome, Firefox, Safari, Edge)
+- Responsive design for mobile, tablet, and desktop
+- Lightweight bundle size
 
 ## External Dependencies
-[Document key external services, APIs, or systems]
+- Figma for design collaboration
+- GitHub for version control
+- npm for package management
+- Chromatic for visual testing
