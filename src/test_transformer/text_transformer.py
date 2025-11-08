@@ -84,6 +84,10 @@ class TextTransformer:
             pyperclip.copy(original_clipboard)
             print("Clipboard restored.")
             
+            # Print the selected text
+            if selected_text:
+                print(f"\n--- Selected Text ---\n{selected_text}\n--- End of Selected Text ---\n")
+            
             return selected_text
             
         except Exception as e:
@@ -105,38 +109,19 @@ class TextTransformer:
             
             # Import langchain components only when needed
             from langchain_openai import ChatOpenAI
-            from langchain_anthropic import ChatAnthropic
-            from langchain_google_genai import ChatGoogleGenerativeAI
             from langchain_core.messages import HumanMessage
             
             # Determine which provider to use based on available API keys
             if Config.OPENAI_API_KEY:
                 logger.info("Using OpenAI model for text transformation")
                 model = ChatOpenAI(
+                    temperature=Config.TEMPERATURE,
                     model=Config.OPENAI_MODEL,
-                    temperature=Config.TEMPERATURE,
-                    max_tokens=Config.MAX_TOKENS,
-                    openai_api_base=Config.OPENAI_BASE_URL
+                    openai_api_key=Config.OPENAI_API_KEY,
+                    base_url=Config.OPENAI_BASE_URL
                 )
                 prompt = f"Please improve the following text while maintaining its meaning:\n\n{text}"
                 
-            elif Config.ANTHROPIC_API_KEY:
-                logger.info("Using Anthropic model for text transformation")
-                model = ChatAnthropic(
-                    model=Config.ANTHROPIC_MODEL,
-                    temperature=Config.TEMPERATURE,
-                    max_tokens=Config.MAX_TOKENS
-                )
-                prompt = f"Please improve the following text while maintaining its meaning:\n\n{text}"
-                
-            elif Config.GOOGLE_API_KEY:
-                logger.info("Using Google model for text transformation")
-                model = ChatGoogleGenerativeAI(
-                    model=Config.GOOGLE_MODEL,
-                    temperature=Config.TEMPERATURE,
-                    max_output_tokens=Config.MAX_TOKENS
-                )
-                prompt = f"Please improve the following text while maintaining its meaning:\n\n{text}"
                 
             else:
                 logger.warning("No API key configured. Returning original text.")
@@ -148,6 +133,11 @@ class TextTransformer:
             
             logger.info("Successfully received response from AI model")
             print("Received response from AI model.")
+            
+            # Print the transformed text
+            if transformed_text:
+                print(f"\n--- AI Response ---\n{transformed_text}\n--- End of AI Response ---\n")
+            
             return transformed_text
             
         except Exception as e:
